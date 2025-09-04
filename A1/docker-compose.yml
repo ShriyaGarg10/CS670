@@ -1,0 +1,33 @@
+services:
+  p2:
+    build: .
+    container_name: p2
+    environment:
+      - ROLE=p2
+    networks:
+      - mpc_net
+
+  p0:
+    build: .
+    container_name: p0
+    environment:
+      - ROLE=p0
+    depends_on:
+      - p2
+      - p1
+    networks:
+      - mpc_net
+
+  p1:
+    build: .
+    container_name: p1
+    environment:
+      - ROLE=p1
+    depends_on:
+      - p2
+    networks:
+      - mpc_net
+
+networks:
+  mpc_net:
+    driver: bridge
