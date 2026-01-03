@@ -1,0 +1,36 @@
+services:
+  p2:
+    build: .
+    container_name: p2
+    command: ./p2
+    networks:
+      - mpc_net
+
+  p1:
+    build: .
+    container_name: p1
+    command: sh -c "sleep 1 && ./p1"
+    depends_on:
+      - p2
+    networks:
+      - mpc_net
+    volumes:
+      # Directly mount local ./data directory to /app/data (no need to copy!)
+      - ./data:/app/data
+
+  p0:
+    build: .
+    container_name: p0
+    command: sh -c "sleep 3 && ./p0"
+    depends_on:
+      - p2
+      - p1
+    networks:
+      - mpc_net
+    volumes:
+      # Directly mount local ./data directory to /app/data (no need to copy!)
+      - ./data:/app/data
+
+networks:
+  mpc_net:
+    driver: bridge
